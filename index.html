@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Schedule</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Bus Schedule Search</h1>
+    
+    <input type="text" id="search" placeholder="Search by time or bus name" onkeyup="filterTable()">
+    <select id="destinationFilter" onchange="filterTable()">
+        <option value="">All Destinations</option>
+        <option value="PUTHOOR">Puthoor</option>
+        <option value="CHEERANKAVU">Cheerankavu</option>
+        <option value="KOLLAM">Kollam</option>
+        <option value="KUNDARA">Kundara</option>
+    </select>
+
+    <table id="busTable">
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Bus Name</th>
+                <th>Destination</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Bus schedule will be added dynamically -->
+        </tbody>
+    </table>
+
+    <script src="script.js"></script>
+</body>
+</html>
