@@ -8,11 +8,19 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
-            margin: 20px;
             text-align: center;
+            margin: 20px;
         }
         h2 {
             color: #333;
+        }
+        input {
+            width: 60%;
+            padding: 10px;
+            margin: 20px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
         }
         table {
             width: 80%;
@@ -22,6 +30,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             border-radius: 8px;
             overflow: hidden;
+            display: none; /* Table hidden initially */
         }
         th, td {
             padding: 12px;
@@ -49,7 +58,9 @@
 <body>
 
     <h2>Bus Schedule</h2>
-    <table>
+    <input type="text" id="searchInput" onkeyup="searchBus()" placeholder="Search by Time, Bus Name, or Destination...">
+
+    <table id="busTable">
         <thead>
             <tr>
                 <th class="index-col">#</th>
@@ -73,61 +84,40 @@
             { time: "7:35", bus_name: "MANIKYAM", destination: "ENATHU" },
             { time: "7:40", bus_name: "UNNIKRISHNAN", destination: "P/THITTA" },
             { time: "7:50", bus_name: "DIYA", destination: "MALANADA" },
-            { time: "8:00", bus_name: "THAMBURATTI", destination: "ENATHU" },
-            { time: "8:05", bus_name: "ST JOHNS", destination: "PUTHOOR" },
-            { time: "8:15", bus_name: "ATHIRA", destination: "PUTHOOR" },
-            { time: "8:30", bus_name: "BROTHERS", destination: "ENATHU" },
-            { time: "8:30", bus_name: "KSRTC", destination: "ADOOR" },
-            { time: "8:40", bus_name: "GURUDEVAN", destination: "BHAJANA" },
-            { time: "9:00", bus_name: "ATHIRA", destination: "PUTHOOR" },
-            { time: "9:05", bus_name: "KSRTC", destination: "ADOOR" },
-            { time: "9:25", bus_name: "AMRUTESWARI", destination: "ADOOR" },
-            { time: "9:35", bus_name: "ATHIRA", destination: "CHEKKALKAD" },
-            { time: "9:40", bus_name: "SOCIETY", destination: "ENATHU" },
-            { time: "9:45", bus_name: "ST. JONES", destination: "PUTHOOR" },
-            { time: "10:00", bus_name: "KSRTC", destination: "ADOOR" },
-            { time: "10:05", bus_name: "MURAHARA", destination: "KONNI" },
-            { time: "10:15", bus_name: "THAMBURATTI", destination: "ENATHU" },
-            { time: "10:30", bus_name: "PUNCHIRI", destination: "CHERUPOIKA" },
-            { time: "10:30", bus_name: "SOCIETY", destination: "ENATHU" },
-            { time: "11:00", bus_name: "GURUDEVAN", destination: "BHAJANA" },
-            { time: "11:05", bus_name: "MURAHARA", destination: "RANNI/PTA" },
-            { time: "11:15", bus_name: "RAJA", destination: "MALANADA" },
-            { time: "11:30", bus_name: "ATHIRA", destination: "PUTHOOR" },
-            { time: "11:45", bus_name: "ST. JONES", destination: "PUTHOOR" },
-            { time: "12:00", bus_name: "THAMBURATTI", destination: "ENATHU" },
-            { time: "12:20", bus_name: "BROTHERS", destination: "ENATHU" },
-            { time: "12:25", bus_name: "ATHIRA", destination: "PUTHOOR" },
-            { time: "12:30", bus_name: "MANIKYAM", destination: "ENATHU" },
-            { time: "12:45", bus_name: "GURUDEVAN", destination: "BHAJANA" },
-            { time: "1:15", bus_name: "BROTHERS", destination: "ENATHU" },
-            { time: "1:30", bus_name: "LAKSHMI", destination: "P/THITTA" },
-            { time: "1:45", bus_name: "SOCIETY", destination: "ENATHU" },
-            { time: "2:00", bus_name: "ST. JOHNS", destination: "PUTHOOR" },
-            { time: "2:30", bus_name: "KSRTC", destination: "ENATHU" },
-            { time: "2:35", bus_name: "DIYA", destination: "MALANADA" },
-            { time: "2:35", bus_name: "PUNCHIRY", destination: "CHERUPOIKA" },
-            { time: "2:45", bus_name: "AMRITESWARI", destination: "CHEKKALKAD" },
-            { time: "3:00", bus_name: "UNNIKRISHNAN", destination: "P/THITTA" }
+            { time: "8:00", bus_name: "THAMBURATTI", destination: "ENATHU" }
         ];
 
-        function populateTable() {
+        function searchBus() {
+            const input = document.getElementById("searchInput").value.toLowerCase();
+            const table = document.getElementById("busTable");
             const tableBody = document.getElementById("busTableBody");
-            busSchedule.forEach((bus, index) => {
-                let row = document.createElement("tr");
-                row.innerHTML = `
-                    <td class="index-col">${index + 1}</td>
-                    <td>${bus.time}</td>
-                    <td>${bus.bus_name}</td>
-                    <td>${bus.destination}</td>
-                `;
-                tableBody.appendChild(row);
-            });
-        }
+            tableBody.innerHTML = ""; // Clear previous results
 
-        window.onload = populateTable;
+            const filteredBuses = busSchedule.filter(bus => 
+                bus.time.toLowerCase().includes(input) ||
+                bus.bus_name.toLowerCase().includes(input) ||
+                bus.destination.toLowerCase().includes(input)
+            );
+
+            if (filteredBuses.length > 0) {
+                table.style.display = "table"; // Show table when results are found
+                filteredBuses.forEach((bus, index) => {
+                    let row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td class="index-col">${index + 1}</td>
+                        <td>${bus.time}</td>
+                        <td>${bus.bus_name}</td>
+                        <td>${bus.destination}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } else {
+                table.style.display = "none"; // Hide table if no results
+            }
+        }
     </script>
 
 </body>
 </html>
+
 
